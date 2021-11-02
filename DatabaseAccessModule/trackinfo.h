@@ -65,10 +65,14 @@ public:
     QMap<TrackItem::TrackItemType, QVector<TrackItem>> createItemsMap();
     QMap<TrackItem::TrackItemType, TrackItem> getItemsByCoord(int km, int m);
 
+    void clear() { itemsMap.clear(); }
+
 public slots:
     void errorFromDBA(QString msg);
 signals:
     void error(QString msg);
+    void log(QString msg);
+
 };
 
 

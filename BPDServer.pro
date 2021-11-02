@@ -2,7 +2,7 @@ QT       += core gui network sql xml
 
 #Application version
 VERSION_MAJOR = 0
-VERSION_MINOR = 1
+VERSION_MINOR = 2
 VERSION_BUILD = 0
 
 DEFINES += "VERSION_MAJOR=$$VERSION_MAJOR"\
@@ -34,14 +34,16 @@ SOURCES += \
     client.cpp \
     main.cpp \
     mainwindow.cpp \
-    server.cpp
+    server.cpp \
+    settings.cpp
 
 HEADERS += \
     DatabaseAccessModule/databaseaccess.h \
     DatabaseAccessModule/trackinfo.h \
     client.h \
     mainwindow.h \
-    server.h
+    server.h \
+    settings.h
 
 FORMS += \
     mainwindow.ui
@@ -50,3 +52,4 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+

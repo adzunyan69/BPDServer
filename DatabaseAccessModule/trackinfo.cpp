@@ -9,23 +9,23 @@ TrackInfo::TrackInfo(QObject *parent) : QObject(parent)
 
 void TrackInfo::errorFromDBA(QString msg)
 {
-    qDebug() << "Error from dba: " << msg;
+    log("Error from dba: " + msg);
     emit error(msg);
 }
 
 void TrackInfo::setAssetNum(QString _assetNum)
 {
-    qDebug() << "AssetNum: " << _assetNum;
+    log("AssetNum: " + _assetNum);
     if(_assetNum.isEmpty() == true)
     {
-        qDebug() << "Error: assetNum is empty";
+        log("Error: assetNum is empty");
         emit error("Ошибка: код пути пуст.");
         return;
     }
 
     if(_assetNum.size() <= 5)
     {
-        qDebug() << "Error: assetNum <= 5";
+        log("Error: assetNum <= 5");
         emit error("Ошибка: некорректный код пути (" + _assetNum + "). Отредактируйте дерево проездов.");
         return;
     }
@@ -39,19 +39,19 @@ void TrackInfo::setAssetNum(QString _assetNum)
 
     if(query.size() == 0)
     {
-        qDebug() << "Error: assetNum isn't exist";
+        log("Error: assetNum isn't exist");
         emit error("Ошибка: код пути " + _assetNum + " не был найден в базе данных.");
         return;
     }
     query.first();
     setDirInfo(query.value("KOD").toString(), query.value("PUT").toString());
 
-    qDebug() << dirCode << " " << trackNum;
+    log(dirCode + " " + trackNum);
 }
 
 void TrackInfo::setDirInfo(QString _dirCode, QString _trackNum)
 {
-    qDebug() << "DirCode: " << _dirCode << ", trackNum: " << _trackNum;
+    log("DirCode: " + _dirCode + ", trackNum: " + _trackNum);
     dirCode = _dirCode;
     trackNum = _trackNum;
 
@@ -60,8 +60,8 @@ void TrackInfo::setDirInfo(QString _dirCode, QString _trackNum)
     QSqlQuery query = dba.execQueryFileBind(sqlPath + "/WAY.sql", bindValue);
     if(query.first() == false)
     {
-        qDebug() << "Error while getting dirName";
-        qDebug() << query.lastError();
+        log("Error while getting dirName");
+        log(query.lastError().text());
         emit error("Ошибка при выполнении запроса для конвертации кода пути в код направления и номер пути (" +
                    _dirCode + ", " + _trackNum + "\nТекст ошибки: " + query.lastError().text());
     }
@@ -71,10 +71,11 @@ void TrackInfo::setDirInfo(QString _dirCode, QString _trackNum)
 
 bool TrackInfo::setAndOpenDatabase(QString databaseName, QString _sqlPath)
 {
+    log("TEST: " + _sqlPath);
     if(dba.openDatabase(databaseName) == false)
     {
-        qDebug() << "Error: database error";
-        qDebug() << dba.lastError();
+        log("Error: database error");
+        log(dba.lastError());
         // emit error("Ошибка при открытии БД: " + dba.lastError());
         return false;
     }
@@ -88,13 +89,13 @@ QVector<TrackItem> TrackInfo::getVec(QString sqlName)
     QTime time = QTime::currentTime();
     QVector<TrackItem> result;
     QMap<QString, QVariant> bindValue;
-    qDebug() << "Sql path: " << sqlName;
+    log("Sql path: " + sqlName);
     if(dirCode.isEmpty() && trackNum.isEmpty())
     {
-        qDebug() << "dir Code && track Num is empty";
+        log("dir Code && track Num is empty");
         if(assetNum.isEmpty() == true)
         {
-            qDebug() << "Asset num is empty";
+            log("Asset num is empty");
             // emit error("Отсутствует код пути и код направления.");
             return result;
         }
@@ -109,7 +110,7 @@ QVector<TrackItem> TrackInfo::getVec(QString sqlName)
 
     if(query.first() == false)
     {
-        qDebug() << sqlName << " - нет данных";
+        log(sqlName + " - нет данных");
         return QVector<TrackItem>();
     }
     do
@@ -237,8 +238,8 @@ QVector<TrackItem> TrackInfo::getVec(QString sqlName)
     } while(query.next());
 
 
-    qDebug() << "Query time: " << time.msecsTo(QTime::currentTime()) << " ms";
-    qDebug() << "Query  " << sqlName << " size: " << result.size();
+    log(QString() + "Query time: " + time.msecsTo(QTime::currentTime()) + " ms");
+    log("Query  " + sqlName + " size: " + result.size());
 
     return result;
 
@@ -247,18 +248,10 @@ QVector<TrackItem> TrackInfo::getVec(QString sqlName)
 
 bool TrackInfo::checkKm(int km)
 {
-//    QPair<int, int> minmax = getMinMaxKm();
-//    if(minmax.first == -1)
-//        return false;
-
-//    qDebug() << "Min km: " << minmax.first << " " << "Max km: " << minmax.second;
-
-//    return (minmax.first <= km) && (minmax.second >= km);
-
     QMap<QString, QVariant> bindValue;
     if(dirCode.isEmpty() && trackNum.isEmpty())
     {
-        qDebug() << "dir Code && track Num is empty";
+        log("dir Code && track Num is empty");
         return false;
     }
     else
@@ -281,7 +274,7 @@ QPair<int, int> TrackInfo::getMinMaxKm()
     QMap<QString, QVariant> bindValue;
     if(dirCode.isEmpty() && trackNum.isEmpty())
     {
-        qDebug() << "dir Code && track Num is empty";
+        log("dir Code && track Num is empty");
         return QPair<int, int>(-1, -1);
     }
     else
@@ -329,7 +322,7 @@ QMap<TrackItem::TrackItemType, QVector<TrackItem>> TrackInfo::createItemsMap()
     itemsMap.insert(TrackItem::CLASS, cls);
     itemsMap.insert(TrackItem::SCR, scr);
     itemsMap.insert(TrackItem::RAIL, rails);
-    qDebug() << "Time for insert: " << time.msecsTo(QTime::currentTime());
+    log("Time for insert: " + time.msecsTo(QTime::currentTime()));
     return itemsMap;
 }
 
@@ -418,7 +411,5 @@ QMap<TrackItem::TrackItemType, TrackItem> TrackInfo::getItemsByCoord(int km, int
     }
 
     return itemsByCoord;
-
-
 }
 

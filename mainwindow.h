@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSystemTrayIcon>
+#include <QCloseEvent>
+#include "settings.h"
 #include "server.h"
 #include "DatabaseAccessModule/databaseaccess.h"
 #include "DatabaseAccessModule/trackinfo.h"
@@ -15,19 +18,25 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
     MyTcpServer *server;
-    // TrackInfo trackInfo;
-    // QTimer timer;
-    // QTcpSocket *server;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void createTrayIcon();
+    void checkSettings();
 public slots:
-    void textReceived(QString text);
-    void log(QString text);
-    void timerSlot();
-    // void slotProcessDatagrams();
+
+protected:
+    void closeEvent(QCloseEvent * event);
 
 private:
     Ui::MainWindow *ui;
+    QSystemTrayIcon         * trayIcon;
+
+private slots:
+    void textReceived(QString text);
+    void log(QString text);
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
+
 };
 #endif // MAINWINDOW_H
