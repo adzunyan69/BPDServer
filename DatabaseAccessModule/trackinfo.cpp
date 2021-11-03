@@ -178,12 +178,8 @@ QVector<TrackItem> TrackInfo::getVec(QString sqlName)
             QString VSK = query.value("VSK").toString();
             QString VSTR = query.value("VSTR").toString();
             QString VALL = query.value("VALL").toString();
-            item.name = (VVSK == "0" ? "" : ("С" + VVSK + "/")) +
-                        (VSK == "0" ? "" : ("Л" + VSK)) +
-                        (VSTR == "0" ? "" : ("Ст" + VSTR + "/")) +
-                        (VALL == "0" ? "" : ("А" + VALL)) +
-                        ";" +
-                        query.value("VPS").toString() + "/" +
+
+            item.name = query.value("VPS").toString() + "/" +
                         query.value("VGR").toString() + "/" +
                         query.value("VPR").toString();
 

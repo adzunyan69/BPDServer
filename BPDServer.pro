@@ -3,7 +3,7 @@ QT       += core gui network sql xml
 #Application version
 VERSION_MAJOR = 0
 VERSION_MINOR = 2
-VERSION_BUILD = 0
+VERSION_BUILD = 1
 
 DEFINES += "VERSION_MAJOR=$$VERSION_MAJOR"\
        "VERSION_MINOR=$$VERSION_MINOR"\
