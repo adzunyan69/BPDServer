@@ -3,10 +3,10 @@
 QMap<Param, QString> Settings::settingsMap =
 {
     // Файлы
-    {AvitrackDB, "Files/AvitrackDataBase"},
+    {AvitrackDB, "Settings/DirBDRad"},
 
     // IP
-    {PORT, "Network/Port"}
+    {PORT, "Settings/Port_BPDServer"}
 
 };
 

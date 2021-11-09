@@ -61,7 +61,7 @@ void MainWindow::createTrayIcon()
 void MainWindow::checkSettings()
 {
     if(Settings::read(Param::AvitrackDB).isEmpty())
-        Settings::write(Param::AvitrackDB, "D:/Prog/GraphicalDB/ApBaze.db");
+        Settings::write(Param::AvitrackDB, QApplication::applicationDirPath() + "/ApBaze.db");
     if(Settings::read(Param::PORT).isEmpty())
         Settings::write(Param::PORT, "2426");
 }
